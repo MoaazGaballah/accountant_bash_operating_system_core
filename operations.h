@@ -1,0 +1,2 @@
+
+int inserter(char *arr);
