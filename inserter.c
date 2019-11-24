@@ -1,19 +1,17 @@
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
-#include "operations.h"
+#include "inserter.h"
 
 int inserter(char *arr)
 {
+	printf("I am in child : %s\n", arr);
 	// write data to file
 	FILE *out = fopen("database.txt", "a");
 	char s[2] = " ";
 	char *token;
 	/* get the first token */
 	token = strtok(arr, s);
-	// walk through other tokens 
+	// walk through other tokens
 	while (token != NULL)
 	{
 		// printf( "%d\n", atoi(token));
@@ -24,11 +22,12 @@ int inserter(char *arr)
 	// read data from file
 	FILE *in = fopen("database.txt", "r");
 	int sum = 0;
-	char * line = malloc(sizeof(char) * 100);
-	while ( fgets(line, 100, in) != NULL) {
+	char *line = malloc(sizeof(char) * 100);
+	while (fgets(line, 100, in) != NULL)
+	{
 		sum += atoi(line);
-        printf("%d\n", atoi(line));
-    }
+		printf("%d\n", atoi(line));
+	}
 	fclose(in);
 	free(line);
 	return sum;

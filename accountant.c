@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
-#include "operations.h"
+#include "inserter.h"
+
 // this is size of array sent to inserter
 int inserterArraySize = 50;
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char **envp)
 {
 	int countinue = 1;
 	char *exit = "exit";
@@ -13,8 +14,8 @@ int main(int argc, char *argv[])
 	{
 		char *line = getLineFromUser();
 		// copy that line again because strtok() affect string
-		char * lineTokens = malloc(sizeof(char) * 100);
-		memcpy (lineTokens, line, strlen(line));
+		char *lineTokens = malloc(sizeof(char) * 100);
+		memcpy(lineTokens, line, strlen(line));
 		printf("You entered : %s\n", lineTokens);
 
 		char s[1] = " ";
@@ -45,12 +46,27 @@ int main(int argc, char *argv[])
 		if (strcasecmp(token, insert) == 0 || strcasecmp(token, insert) == 10)
 		{
 			// printf("geldi : %s\n", insert);
-			if (*(line + strlen(token) + 1) - 48 <0 || *(line + strlen(token) + 1) - 48 > 9){
+			if (*(line + strlen(token) + 1) - 48 < 0 || *(line + strlen(token) + 1) - 48 > 9)
+			{
 				printf("Parameter wrong\n");
 				continue;
 			}
 			// printf("insert13 : %s\n", (line + strlen(token) + 1));
-			printf("sum is : %d\n", inserter(line + strlen(token) + 1));
+			// inserter.c calling
+			// printf("sum is : %d\n", inserter(line + strlen(token) + 1));
+			int status;
+			int f = fork();
+			if (f == 0)
+			{
+				status = execve("inserter", (line + strlen(token) + 1), envp);
+				perror("exec2: execve failed\n");
+			}
+			else
+			{
+				// returned value from fork
+				wait(&status);
+				printf("  WEXITSTATUS:  %d\n", WEXITSTATUS(status));
+			}
 		}
 		free(line);
 		free(lineTokens);
