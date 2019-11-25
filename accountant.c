@@ -1,9 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include "inserter.h"
+#include <sys/wait.h>
 
 // this is size of array sent to inserter
 int inserterArraySize = 50;
+
+char *getLineFromUser()
+{
+	printf("Accountant >> ");
+	char *user_input = malloc(sizeof(char) * 100);
+	fgets(user_input, 100, stdin);
+	// int len = sizeOfString(user_input);
+	// printf("Length : %d\n", strlen(user_input));
+	return user_input;
+}
 
 int main(int argc, char *argv[], char **envp)
 {
@@ -56,16 +67,22 @@ int main(int argc, char *argv[], char **envp)
 			// printf("sum is : %d\n", inserter(line + strlen(token) + 1));
 			int status;
 			int f = fork();
+			// printf("this is f from fork : %d \n", f);
+
+			// This is array will sent
+			char *newargv[1];
+			newargv[0] = (line + strlen(token) + 1);
+			newargv[1] = NULL;
 			if (f == 0)
 			{
-				status = execve("inserter", (line + strlen(token) + 1), envp);
-				perror("exec2: execve failed\n");
+				status = execve("inserter", newargv, envp);
+				perror("execve: execve failed\n");
 			}
 			else
 			{
 				// returned value from fork
 				wait(&status);
-				printf("  WEXITSTATUS:  %d\n", WEXITSTATUS(status));
+				printf("Sum is:  %d\n", WEXITSTATUS(status));
 			}
 		}
 		free(line);
