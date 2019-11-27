@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdio.h>
-#include "inserter.h"
 
 int inserter(char *arr)
 {
@@ -15,22 +14,22 @@ int inserter(char *arr)
 	while (token != NULL)
 	{
 		// printf( "%d\n", atoi(token));
-		fprintf(out, "%d\n", atoi(token));
+		fprintf(out, "\n%d", atoi(token));
 		token = strtok(NULL, s);
 	}
 	fclose(out);
-	// read data from file
-	FILE *in = fopen("database.txt", "r");
-	int sum = 0;
-	char *line = malloc(sizeof(char) * 100);
-	while (fgets(line, 100, in) != NULL)
-	{
-		sum += atoi(line);
-		printf("%d\n", atoi(line));
-	}
-	fclose(in);
-	free(line);
-	return sum;
+	// // read data from file
+	// FILE *in = fopen("database.txt", "r");
+	// int sum = 0;
+	// char *line = malloc(sizeof(char) * 100);
+	// while (fgets(line, 100, in) != NULL)
+	// {
+	// 	sum += atoi(line);
+	// 	printf("%d\n", atoi(line));
+	// }
+	// fclose(in);
+	// free(line);
+	return 1;
 }
 
 // int sizeOfString(char *str)
@@ -88,6 +87,6 @@ int main(int argc, char *argv[])
 	// printf("argc : %d\n", argc);
 	// printf("argv : %s\n", argv[0]);
 	int sum = inserter(argv[0]);
-	printf("This is from sum %d\n", sum);
+	// printf("This is from sum %d\n", sum);
 	return sum;
 }
