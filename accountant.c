@@ -35,7 +35,7 @@ int main(int argc, char *argv[], char **envp)
 	int countinue = 1;
 	char *exit = "exit";
 	char *insert = "insert";
-	char *calc = "calc";
+	char *calculate = "calculate";
 	char *readall = "readall";
 	char *clear = "clear";
 	char *help = "help";
@@ -60,7 +60,7 @@ int main(int argc, char *argv[], char **envp)
 		exitToken = strtok(exitTokensLine, s);
 		// this value will be null at end of while
 		inserterTokens = exitToken;
-		// this value will be used in calc program
+		// this value will be used in calculate program
 		calcTokens = exitToken;
 		// this value will be used in readall command
 		readallToken = exitToken;
@@ -126,18 +126,18 @@ int main(int argc, char *argv[], char **envp)
 			}
 		}
 		// printf("calcTokens : %s\n", calcTokens);
-		// printf("Calc: %s\n", calc);
-		// printf("compare : %d\n", strcasecmp(calcTokens, calc));
+		// printf("Calc: %s\n", calculate);
+		// printf("compare : %d\n", strcasecmp(calcTokens, calculate));
 		// printf("the rest of calcLine : %s\n", (calcTokensLine + strlen(calcTokens) + 1));
 
 		// if calc is called regardless letter case
-		else if (strcasecmp(calcTokens, calc) == 0 || strcasecmp(calcTokens, calc) == 10)
+		else if (strcasecmp(calcTokens, calculate) == 0 || strcasecmp(calcTokens, calculate) == 10)
 		{
 			// printf("Your calcTokensLine is : %s\n", calcTokensLine);
 			int status;
 			int f = fork();
 
-			// This is array will sent to calc program
+			// This is array will sent to calculate program
 			char *newargv[1];
 			newargv[0] = (calcTokensLine + strlen(calcTokens) + 1);
 			newargv[1] = NULL;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[], char **envp)
 				}
 
 				// printf("%c\n", *(calcErrorTokens + 8));
-				if (isdigit(calcErrorTokens[8]) == 0)
+				if (isdigit(calcErrorTokens[13]) == 0)
 				{
 					printf("You must enter the first index valid\n");
 					continue;
@@ -166,12 +166,12 @@ int main(int argc, char *argv[], char **envp)
 				int i = 0;
 
 				//Find first space
-				while (calcErrorTokens[8 + i] != ' ')
+				while (calcErrorTokens[13 + i] != ' ')
 				{
 					i++;
 				}
 				// printf("this is calcErrorTokens[8 + %d] : %c\n", i, calcErrorTokens[8 + i]);
-				if (isdigit(calcErrorTokens[8 + i + 1]) == 0)
+				if (isdigit(calcErrorTokens[13 + i + 1]) == 0)
 				{
 					printf("You must enter the second index valid\n");
 					continue;
@@ -214,14 +214,15 @@ int main(int argc, char *argv[], char **envp)
 		{
 			printf("* You can insert positive numbers to database.txt by calling insert\n");
 			printf("        Exmaple : ");
-			printf("insert 4 6 9\n");
-			printf("* You can add all numbers in range exist in database.txt by calling calc\n");
+			printf("insert 4 6 9\n\n");
+			printf("* You can add all numbers in range exist in database.txt by calling calculate\n");
 			printf("        Exmaple : ");
-			printf("calc -r 6 9\n");
-			printf("Or just numbers in specified indices exist in database.txt by calling calc\n");
+			printf("calculate -r 6 9\n");
+			printf("Or just numbers in specified indices exist in database.txt by calling calculate\n");
 			printf("        Exmaple : ");
-			printf("calc -s 6 9\n");
-			printf("* You can clear console by calling clears\n");
+			printf("calculate -s 6 9\n\n");
+			printf("Be aware that in out of bounded statuses program returns 0\n");
+			printf("* You can clear console by calling clears\n\n");
 			printf("* You can get available commands by calling help\n");
 		}
 		else

@@ -109,12 +109,12 @@ int calc(char *arr)
         if (firstIndexOutOfBound == 1)
         {
             // return "First index is out of bound";
-            return 101010101011;
+            return 0;
         }
         else if (atoi(firstIndexToken) != atoi(secondIndexToken) && secondIndexOutOfBound == 1) // to avoid nested if statement when atoi(firstIndexToken) == atoi(secondIndexToken)
         {
             // return "Second index is out of bound";
-            return 101010101010;
+            return 0;
         }
 
         fclose(in);
