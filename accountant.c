@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 // this is size of array sent to inserter
 int inserterArraySize = 50;
@@ -21,7 +22,7 @@ int isNumber(char *str)
 	for (int i = 0; i < strlen(str); i++)
 	{
 		printf("This is str[i] : %c\n",
-		       str[i]);
+			   str[i]);
 		if (isdigit(str[i]) == 0)
 			return 0;
 	}
@@ -35,6 +36,10 @@ int main(int argc, char *argv[], char **envp)
 	char *exit = "exit";
 	char *insert = "insert";
 	char *calc = "calc";
+	char *readall = "readall";
+	char *clear = "clear";
+	char *help = "help";
+
 	while (countinue)
 	{
 		// get a main line from user
@@ -46,30 +51,39 @@ int main(int argc, char *argv[], char **envp)
 		char *calcTokensLine = malloc(sizeof(char) * 100);
 		memcpy(calcTokensLine, exitTokensLine, strlen(exitTokensLine));
 		// printf("Your calcTokensLine is : %s\n", calcTokensLine);
+		char *calcErrorTokens = malloc(sizeof(char) * 100);
+		memcpy(calcErrorTokens, calcTokensLine, strlen(calcTokensLine));
 
 		char s[1] = " ";
-		char *inserterTokens, *exitTokens, *calcTokens;
+		char *inserterTokens, *exitToken, *calcTokens, *readallToken, *clearToken, *helpToken;
 		/* get the first token */
-		exitTokens = strtok(exitTokensLine, s);
+		exitToken = strtok(exitTokensLine, s);
 		// this value will be null at end of while
-		inserterTokens = exitTokens;
+		inserterTokens = exitToken;
 		// this value will be used in calc program
-		calcTokens = exitTokens;
+		calcTokens = exitToken;
+		// this value will be used in readall command
+		readallToken = exitToken;
+		// this will be used for clear command
+		clearToken = exitToken;
+		// this variable will be used in help command
+		helpToken = exitToken;
+
 
 		/* walk through other tokens */
 		// while (exitTokens != NULL)
 		// {
-			// printf("token : %s\n", token);
-			// printf("exit: %s\n", exit);
-			// printf("compare : %d\n", strcasecmp(token, exit));
+		// printf("token : %s\n", token);
+		// printf("exit: %s\n", exit);
+		// printf("compare : %d\n", strcasecmp(token, exit));
 
-			// if exit found at any where in a line
-			if (strcasecmp(exitTokens, exit) == 0 || strcasecmp(exitTokens, exit) == 10)
-			{
-				// printf("geldi : %s\n", token);
-				countinue = 0;
-				break;
-			}
+		// if exit found at any where in a line
+		if (strcasecmp(exitToken, exit) == 0 || strcasecmp(exitToken, exit) == 10)
+		{
+			// printf("geldi : %s\n", token);
+			countinue = 0;
+			break;
+		}
 		// 	exitTokens = strtok(NULL, s);
 		// }
 		// printf("inserterTokens : %s\n", inserterTokens);
@@ -94,7 +108,7 @@ int main(int argc, char *argv[], char **envp)
 			int f = fork();
 			// printf("this is f from fork : %d \n", f);
 
-			// This is array will sent to inserter function
+			// This is array will sent to inserter program
 			char *newargv[1];
 			newargv[0] = (inserterTokensLine + strlen(inserterTokens) + 1);
 			newargv[1] = NULL;
@@ -115,14 +129,15 @@ int main(int argc, char *argv[], char **envp)
 		// printf("Calc: %s\n", calc);
 		// printf("compare : %d\n", strcasecmp(calcTokens, calc));
 		// printf("the rest of calcLine : %s\n", (calcTokensLine + strlen(calcTokens) + 1));
+
 		// if calc is called regardless letter case
 		else if (strcasecmp(calcTokens, calc) == 0 || strcasecmp(calcTokens, calc) == 10)
 		{
-			printf("Your calcTokensLine is : %s\n", calcTokensLine);
+			// printf("Your calcTokensLine is : %s\n", calcTokensLine);
 			int status;
 			int f = fork();
 
-			// This is array will sent to inserter function
+			// This is array will sent to calc program
 			char *newargv[1];
 			newargv[0] = (calcTokensLine + strlen(calcTokens) + 1);
 			newargv[1] = NULL;
@@ -130,8 +145,6 @@ int main(int argc, char *argv[], char **envp)
 			{
 
 				// these are some controls for input
-				char *calcErrorTokens = malloc(sizeof(char) * 100);
-				memcpy(calcErrorTokens, calcTokensLine, strlen(calcTokensLine));
 				if (*(calcErrorTokens + strlen(calcTokens) + 1) != '-')
 				{
 					printf("You forget '-'\n");
@@ -142,50 +155,81 @@ int main(int argc, char *argv[], char **envp)
 					printf("You must enter '-s' for single or '-r' for range\n");
 					continue;
 				}
-				
+
 				// printf("%c\n", *(calcErrorTokens + 8));
 				if (isdigit(calcErrorTokens[8]) == 0)
 				{
-					printf("You must enter the first index\n");
+					printf("You must enter the first index valid\n");
 					continue;
 				}
-				else if(strlen(calcErrorTokens) <= 10 )
+
+				int i = 0;
+
+				//Find first space
+				while (calcErrorTokens[8 + i] != ' ')
 				{
-					printf("You must enter the second index\n");
+					i++;
+				}
+				// printf("this is calcErrorTokens[8 + %d] : %c\n", i, calcErrorTokens[8 + i]);
+				if (isdigit(calcErrorTokens[8 + i + 1]) == 0)
+				{
+					printf("You must enter the second index valid\n");
 					continue;
 				}
-				
-				// int count = 0;
-				// while (*(calcErrorTokens + 8 + count) != 32)
-				// {
-				// 	printf("this is counter : %d\n", count);
-				// 	count++;
-				// }
-				// // to go to next character after space
-				// count ++;
-				// if (isdigit(calcErrorTokens[8 + count]) == 0)
-				// {
-				// 	printf("You must enter the second index\n");
-				// 	continue;
-				// }
 
 				// call calc
 				status = execve("calc", newargv, envp);
 				perror("execve: execve failed\n");
+				// printf("I am here");
 				free(calcErrorTokens);
+				continue;
 			}
 			else
 			{
 				// returned value from fork
 				wait(&status);
 				printf("Result is:  %d\n", WEXITSTATUS(status));
+				free(calcErrorTokens);
 			}
-		}else
+		}
+		else if (strcasecmp(readallToken, readall) == 0 || strcasecmp(readallToken, readall) == 10)
+		{
+			// read data from file
+			FILE *in = fopen("database.txt", "r");
+			int sum = 0;
+			char *line = malloc(sizeof(char) * 100);
+			while (fgets(line, 100, in) != NULL)
+			{
+				sum += atoi(line);
+				printf("%d\n", atoi(line));
+			}
+			fclose(in);
+			free(line);
+		}
+		else if (strcasecmp(clearToken, clear) == 0 || strcasecmp(clearToken, clear) == 10)
+		{
+			const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
+			write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
+		}else if (strcasecmp(helpToken, help) == 0 || strcasecmp(helpToken, help) == 10)
+		{
+			printf("* You can insert positive numbers to database.txt by calling insert\n");
+			printf("        Exmaple : ");
+			printf("insert 4 6 9\n");
+			printf("* You can add all numbers in range exist in database.txt by calling calc\n");
+			printf("        Exmaple : ");
+			printf("calc -r 6 9\n");
+			printf("Or just numbers in specified indices exist in database.txt by calling calc\n");
+			printf("        Exmaple : ");
+			printf("calc -s 6 9\n");
+			printf("* You can clear console by calling clears\n");
+			printf("* You can get available commands by calling help\n");
+		}
+		else
 		{
 			printf("Please enter a valid command !\n");
 			continue;
 		}
-		
+
 		free(inserterTokensLine);
 		free(exitTokensLine);
 		free(calcTokensLine);

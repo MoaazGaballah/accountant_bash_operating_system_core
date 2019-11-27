@@ -60,6 +60,11 @@ int calc(char *arr)
     // get the second token
     char *secondIndexToken = strtok(NULL, space);
 
+    // this is special for range (if there is a space after statement)
+    char *secondIndexTokenTemp[10];
+    strcpy(secondIndexTokenTemp, secondIndexToken);
+    // printf("this is after assignment : %s\n", secondIndexTokenTemp);
+
     // this instruction set the last element in secondIndexToken to NULL (0)
     secondIndexToken[strlen(secondIndexToken) - 1] = 0;
     // printf("this is secondIndexToken : %s\n", secondIndexToken);
@@ -119,16 +124,18 @@ int calc(char *arr)
     }
     else if (strcasecmp(singleOrRangeToken, r) == 0 || strcasecmp(singleOrRangeToken, r) == 10)
     {
+
+        // printf("this is out side while : %s\n", secondIndexTokenTemp);
         int currentPointer = 0;
         while (fgets(line, 100, in) != NULL)
         {
             // printf("counter is : %d \t", currentPointer);
             // printf("atoi(firstIndexToken) is : %d\t", atoi(firstIndexToken));
-            // printf("atoi(secondIndexToken) is : %d\n", atoi(secondIndexToken));
-            if (currentPointer >= atoi(firstIndexToken) && currentPointer <= atoi(secondIndexToken))
+            // printf("atoi(secondIndexTokenTemp) is : %d\n", atoi(secondIndexTokenTemp));
+            if (currentPointer >= atoi(firstIndexToken) && currentPointer <= atoi(secondIndexTokenTemp))
             {
                 sum += atoi(line);
-                if (atoi(firstIndexToken) == atoi(secondIndexToken))
+                if (atoi(firstIndexToken) == atoi(secondIndexTokenTemp))
                 {
                     // there is no need to read the whole file
                     break;
@@ -169,7 +176,7 @@ int main(int argc, char *argv[])
     // printf("argc : %d\n", argc);
     // printf("argv : %s\n", argv[0]);
     int sum = calc(argv[0]);
-    printf("This is sum from main calc %d\n", sum);
+    // printf("This is sum from main calc %d\n", sum);
 
     // int sum = calc(argv[0]);
 
