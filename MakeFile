@@ -1,0 +1,18 @@
+#-*-MakeFile -*-
+CC = gcc
+CFLAGS = -c -wall
+
+all: calc inserter prog
+
+
+calc: calculate.c
+	$(CC) calculate.c -o calc
+
+inserter: inserter.c
+	$(CC) inserter.c -o inserter
+	
+prog: accountant.c
+	$(CC) accountant.c -o prog
+
+clean:
+	rm -rf *o all

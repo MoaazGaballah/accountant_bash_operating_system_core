@@ -212,18 +212,19 @@ int main(int argc, char *argv[], char **envp)
 			write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
 		}else if (strcasecmp(helpToken, help) == 0 || strcasecmp(helpToken, help) == 10)
 		{
-			printf("* You can insert positive numbers to database.txt by calling insert\n");
+			printf("*** You can insert positive numbers to database.txt by calling insert\n");
 			printf("        Exmaple : ");
 			printf("insert 4 6 9\n\n");
-			printf("* You can add all numbers in range exist in database.txt by calling calculate\n");
+			printf("*** You can add all numbers in range exist in database.txt by calling calculate\n");
 			printf("        Exmaple : ");
 			printf("calculate -r 6 9\n");
 			printf("Or just numbers in specified indices exist in database.txt by calling calculate\n");
 			printf("        Exmaple : ");
 			printf("calculate -s 6 9\n\n");
-			printf("Be aware that in out of bounded statuses program returns 0\n");
-			printf("* You can clear console by calling clears\n\n");
-			printf("* You can get available commands by calling help\n");
+			printf("Be aware that in out of bounded statuses, program returns 0\n\n");
+			printf("*** You can read all data exist in database.txt file by calling 'readall'\n\n");
+			printf("*** You can clear console by calling 'clear'\n\n");
+			printf("*** You can get available commands by calling 'help'\n");
 		}
 		else
 		{
